@@ -1,10 +1,10 @@
 //My Goal:
 
-Hame ek quiz application jismein user login/register kar sake, admin quiz bana aur delete kar sake, aur normal user quiz de sake aur apna score dekh sake.
+Hame ek quiz application banana jismein user login/register kar sake, admin quiz bana aur delete kar sake, aur normal user quiz dekh sake aur apna score dekh sake.
 
-tep-by-step Approach:
+step-by-step Approach:
 
-//1️User Registration & Login System
+//1️ User Registration & Login System
 
 
 Sabse pehle User class banaya jisme username, password aur admin check ke liye isAdmin flag rakha.

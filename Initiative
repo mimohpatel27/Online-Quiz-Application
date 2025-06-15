@@ -1,0 +1,60 @@
+//My Goal:
+
+Hame ek quiz application jismein user login/register kar sake, admin quiz bana aur delete kar sake, aur normal user quiz de sake aur apna score dekh sake.
+
+tep-by-step Approach:
+
+//1️User Registration & Login System
+
+
+Sabse pehle User class banaya jisme username, password aur admin check ke liye isAdmin flag rakha.
+
+Ek UserManager class banaya jisme list me sare users store ho rahe hai aur usi se login/register ho raha hai.
+
+//2️ Quiz and Question Structure
+
+
+Har quiz ke liye ek Quiz class banaya jisme topic aur us topic ke questions list me store ho rahe hai.
+
+Ek Question class banaya jisme question ka title, 4 options aur correct answer ka index rakha.
+
+//3️ Admin Role (Quiz Creation & Deletion)
+
+
+Agar login karne wala admin hai to uske liye adminMenu() banaya.
+
+Admin quiz ka topic aur questions manually add karta hai with 4 options and correct answer.
+
+Admin quiz ko delete bhi kar sakta hai topic name se.
+
+// 4️ User Role (Attempt Quiz & View Scores)
+
+Agar login karne wala normal user hai to uske liye userMenu() banaya.
+
+User available topics me se kisi ek quiz ko choose karke questions attempt karega.
+
+Score calculate karke Attempt object banake usme username, topic aur score store kar rahe hai.
+
+//5️ Data Structures Used
+
+ArrayList: Users, Quizzes, Questions aur Attempts sab ArrayList me store ho rahe hai for dynamic handling.
+
+Scanner: User se input lene ke liye har jagah Scanner use kiya.
+
+//6️ 15 Quizzes Merge Karna
+
+Maine alag se ek static block me 15 quizzes banaye, har quiz ka topic aur 2 sample questions diye.
+
+Topic naming consistent rakha jaise deepBrainStimulation, javaBasics, wordpressBasics, etc.
+
+In quizzes ko startup pe hi QuizManager.addQuiz() se list me add kar liya.
+
+//Final Output:
+
+Jab user run karta hai app to sabse pehle Register/Login ka option milta hai.
+
+Admin login karke quizzes create/delete karta hai.
+
+Normal user quizzes attempt karta hai aur apne previous attempts dekh sakta hai.
+
+Program infinite loop me chalta hai jab tak user Logout ya Exit nahi karta.

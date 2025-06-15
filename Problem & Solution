@@ -1,0 +1,345 @@
+Online Quiz Application
+
+Needs of the Project 
+
+Project Description:
+Create an Online Quiz Application in Java that allows users to take quizzes on various topics. The application should support multiple-choice questions, track user progress, and provide feedback on quiz performance.
+
+Project Requirements:
+
+1. User Authentication:
+   - Implement a login system where users can create an account or log in with existing credentials.
+
+2. Quiz Management:
+   - Allow administrators to create quizzes with multiple-choice questions.
+   - Each question should have a title, options, and correct answer(s).
+   - Enable administrators to edit and delete quizzes.
+
+3. Quiz Taking:
+   - Users should be able to select and take quizzes from the available list of topics.
+   - Display one question at a time with options for the user to select the answer(s).
+   - Provide feedback on each question (correct/incorrect) immediately after the user submits their answer.
+
+4. Scoring and Progress Tracking:
+   - Calculate and display the user's score at the end of each quiz.
+   - Track user progress by recording quiz attempts and scores.
+   - Allow users to view their past quiz attempts and scores.
+
+//code is Here ::
+
+import java.util.*;
+
+class User {
+    private String username;
+    private String password;
+    private boolean isAdmin;
+
+    public User(String username, String password, boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
+    }
+
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public boolean isAdmin() { return isAdmin; }
+}
+
+class Question {
+    private String title;
+    private List<String> options;
+    private int correctAnswerIndex;
+
+    public Question(String title, List<String> options, int correctAnswerIndex) {
+        this.title = title;
+        this.options = options;
+        this.correctAnswerIndex = correctAnswerIndex;
+    }
+
+    public String getTitle() { return title; }
+    public List<String> getOptions() { return options; }
+    public int getCorrectAnswerIndex() { return correctAnswerIndex; }
+}
+
+class Quiz {
+    private String topic;
+    private List<Question> questions;
+
+    public Quiz(String topic, List<Question> questions) {
+        this.topic = topic;
+        this.questions = questions;
+    }
+
+    public String getTopic() { return topic; }
+    public List<Question> getQuestions() { return questions; }
+}
+
+class UserManager {
+    private static List<User> users = new ArrayList<>();
+
+    public static void registerUser(String username, String password, boolean isAdmin) {
+        users.add(new User(username, password, isAdmin));
+    }
+
+    public static User loginUser(String username, String password) {
+        for (User user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
+    }
+}
+
+class QuizManager {
+    private static List<Quiz> quizList = new ArrayList<>();
+
+    static {
+        addPreloadedQuizzes();
+    }
+
+    public static void addQuiz(Quiz quiz) {
+        quizList.add(quiz);
+    }
+
+    public static void removeQuiz(String topic) {
+        quizList.removeIf(q -> q.getTopic().equalsIgnoreCase(topic));
+    }
+
+    public static List<Quiz> getAllQuizzes() {
+        return quizList;
+    }
+
+    public static Quiz getQuizByTopic(String topic) {
+        for (Quiz q : quizList) {
+            if (q.getTopic().equalsIgnoreCase(topic)) return q;
+        }
+        return null;
+    }
+
+    private static void addPreloadedQuizzes() {
+        List<Quiz> preloaded = List.of(
+            new Quiz("Java Basics", List.of(
+                new Question("Which keyword is used to inherit a class?", List.of("this", "super", "extends", "implements"), 2),
+                new Question("Which of these is not a primitive type?", List.of("int", "String", "boolean", "double"), 1)
+            )),
+            new Quiz("Biomedical Instrumentation", List.of(
+                new Question("What does ECG measure?", List.of("Brain activity", "Heart signals", "Lung pressure", "Kidney rate"), 1),
+                new Question("Which sensor is used in pulse oximetry?", List.of("Photodiode", "Thermocouple", "Strain Gauge", "Microphone"), 0)
+            )),
+            new Quiz("Deep Brain Stimulation", List.of(
+                new Question("Which brain area is targeted in DBS for Parkinson's?", List.of("Cerebellum", "Subthalamic nucleus", "Cortex", "Hippocampus"), 1),
+                new Question("What type of signal is used in DBS?", List.of("AC", "DC", "Pulse", "Analog"), 2)
+            )),
+            new Quiz("WordPress Fundamentals", List.of(
+                new Question("What is the default WordPress theme called?", List.of("Twenty Twenty", "Classic", "Neve", "Astra"), 0),
+                new Question("Which language is WordPress written in?", List.of("Java", "PHP", "Python", "Ruby"), 1)
+            )),
+            new Quiz("DSA - Sorting Algorithms", List.of(
+                new Question("Which algorithm has worst-case O(n^2)?", List.of("Merge Sort", "Heap Sort", "Quick Sort", "Bubble Sort"), 3),
+                new Question("Which is a divide and conquer sorting algorithm?", List.of("Insertion", "Selection", "Bubble", "Merge"), 3)
+            )),
+            new Quiz("Shopify E-commerce", List.of(
+                new Question("Shopify is used for?", List.of("Blogging", "E-commerce", "Marketing", "Streaming"), 1),
+                new Question("Which is a Shopify plan?", List.of("Basic", "Starter", "Advanced", "All of these"), 3)
+            )),
+            new Quiz("Closed-Loop Control", List.of(
+                new Question("What is feedback in control systems?", List.of("Output sent to input", "Input delay", "Power cut", "Load resistance"), 0),
+                new Question("Closed-loop systems are:", List.of("Open", "Self-adjusting", "Static", "Uncontrolled"), 1)
+            )),
+            new Quiz("Java OOP", List.of(
+                new Question("What is encapsulation?", List.of("Hiding data", "Inheriting", "Overriding", "Polymorphism"), 0),
+                new Question("Interfaces can have:", List.of("Constructors", "Private methods", "Abstract methods", "Static variables"), 2)
+            )),
+            new Quiz("Stacks & Queues", List.of(
+                new Question("Stack uses:", List.of("FIFO", "LIFO", "DFS", "BFS"), 1),
+                new Question("Which is not a queue type?", List.of("Circular", "Priority", "Stack", "Double-ended"), 2)
+            )),
+            new Quiz("Java Collections", List.of(
+                new Question("Which interface supports key-value?", List.of("Set", "List", "Map", "Queue"), 2),
+                new Question("ArrayList is:", List.of("Synchronized", "Thread-safe", "Resizable", "Fixed-size"), 2)
+            )),
+            new Quiz("Biomedical Sensors", List.of(
+                new Question("EMG measures:", List.of("Heart", "Muscle", "Lung", "Skin"), 1),
+                new Question("EEG is used to monitor:", List.of("Muscles", "Heart", "Brain", "Skin"), 2)
+            )),
+            new Quiz("Firebase in Android", List.of(
+                new Question("Firebase is used for:", List.of("Authentication", "Hosting", "Database", "All of the above"), 3),
+                new Question("Which Firebase feature is realtime?", List.of("Firestore", "Authentication", "Storage", "Analytics"), 0)
+            )),
+            new Quiz("SEO for WordPress", List.of(
+                new Question("SEO stands for:", List.of("Search Everywhere Option", "Search Engine Optimization", "Secure Easy Output", "Service External Order"), 1),
+                new Question("Best plugin for SEO:", List.of("Yoast", "Jetpack", "Elementor", "Akismet"), 0)
+            )),
+            new Quiz("Object Detection in Python", List.of(
+                new Question("Which library is used for object detection?", List.of("NumPy", "Pandas", "OpenCV", "Matplotlib"), 2),
+                new Question("Haar Cascades are used in:", List.of("Image Captioning", "Face Detection", "Color Correction", "Encryption"), 1)
+            )),
+            new Quiz("Java Exception Handling", List.of(
+                new Question("Which is not an exception type?", List.of("IOException", "NullPointerException", "SyntaxError", "ArithmeticException"), 2),
+                new Question("try-catch is used for:", List.of("Loops", "Condition", "Handling errors", "None"), 2)
+            ))
+        );
+
+        for (Quiz q : preloaded) {
+            addQuiz(q);
+        }
+    }
+}
+
+class Attempt {
+    private String username;
+    private String topic;
+    private int score;
+    private int total;
+
+    public Attempt(String username, String topic, int score, int total) {
+        this.username = username;
+        this.topic = topic;
+        this.score = score;
+        this.total = total;
+    }
+
+    public String getUsername() { return username; }
+    public String getTopic() { return topic; }
+    public int getScore() { return score; }
+    public int getTotal() { return total; }
+}
+
+public class task {
+    static Scanner sc = new Scanner(System.in);
+    static List<Attempt> attempts = new ArrayList<>();
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\n1. Register\n2. Login\n3. Exit");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> register();
+                case 2 -> login();
+                case 3 -> System.exit(0);
+            }
+        }
+    }
+
+    static void register() {
+        System.out.print("Enter username: ");
+        String user = sc.nextLine();
+        System.out.print("Enter password: ");
+        String pass = sc.nextLine();
+        System.out.print("Is Admin? (true/false): ");
+        boolean isAdmin = sc.nextBoolean();
+        sc.nextLine();
+        UserManager.registerUser(user, pass, isAdmin);
+        System.out.println("User registered.");
+    }
+
+    static void login() {
+        System.out.print("Enter username: ");
+        String user = sc.nextLine();
+        System.out.print("Enter password: ");
+        String pass = sc.nextLine();
+        User u = UserManager.loginUser(user, pass);
+        if (u == null) {
+            System.out.println("Invalid credentials.");
+            return;
+        }
+        if (u.isAdmin()) adminMenu(u);
+        else userMenu(u);
+    }
+
+    static void adminMenu(User admin) {
+        while (true) {
+            System.out.println("\n1. Create Quiz\n2. Delete Quiz\n3. Logout");
+            int ch = sc.nextInt();
+            sc.nextLine();
+            if (ch == 3) break;
+
+            switch (ch) {
+                case 1 -> {
+                    System.out.print("Enter quiz topic: ");
+                    String topic = sc.nextLine();
+                    List<Question> questions = new ArrayList<>();
+                    System.out.print("How many questions? ");
+                    int n = sc.nextInt(); sc.nextLine();
+                    for (int i = 0; i < n; i++) {
+                        System.out.print("Question: ");
+                        String q = sc.nextLine();
+                        List<String> options = new ArrayList<>();
+                        for (int j = 0; j < 4; j++) {
+                            System.out.print("Option " + (j + 1) + ": ");
+                            options.add(sc.nextLine());
+                        }
+                        System.out.print("Correct option index (0-3): ");
+                        int correct = sc.nextInt(); sc.nextLine();
+                        questions.add(new Question(q, options, correct));
+                    }
+                    QuizManager.addQuiz(new Quiz(topic, questions));
+                    System.out.println("Quiz created.");
+                }
+                case 2 -> {
+                    System.out.print("Enter topic to delete: ");
+                    String topic = sc.nextLine();
+                    QuizManager.removeQuiz(topic);
+                    System.out.println("Quiz deleted.");
+                }
+            }
+        }
+    }
+
+    static void userMenu(User user) {
+        while (true) {
+            System.out.println("\n1. Take Quiz\n2. View Attempts\n3. Logout");
+            int ch = sc.nextInt(); sc.nextLine();
+            if (ch == 3) break;
+
+            switch (ch) {
+                case 1 -> {
+                    System.out.println("Available Quizzes:");
+                    List<Quiz> quizzes = QuizManager.getAllQuizzes();
+                    for (Quiz q : quizzes) {
+                        System.out.println("- " + q.getTopic());
+                    }
+                    System.out.print("Enter topic to start: ");
+                    String topic = sc.nextLine();
+                    Quiz quiz = QuizManager.getQuizByTopic(topic);
+                    if (quiz == null) {
+                        System.out.println("Quiz not found.");
+                        break;
+                    }
+                    int score = 0;
+                    List<Question> qs = quiz.getQuestions();
+                    for (Question q : qs) {
+                        System.out.println("\n" + q.getTitle());
+                        List<String> opts = q.getOptions();
+                        for (int i = 0; i < opts.size(); i++) {
+                            System.out.println(i + ". " + opts.get(i));
+                        }
+                        System.out.print("Your answer: ");
+                        int ans = sc.nextInt();
+                        sc.nextLine();
+                        if (ans == q.getCorrectAnswerIndex()) {
+                            System.out.println("Correct!");
+                            score++;
+                        } else {
+                            System.out.println("Incorrect. Correct was: " + q.getCorrectAnswerIndex());
+                        }
+                    }
+                    System.out.println("Quiz complete. Score: " + score + "/" + qs.size());
+                    attempts.add(new Attempt(user.getUsername(), topic, score, qs.size()));
+                }
+                case 2 -> {
+                    System.out.println("Your Attempts:");
+                    for (Attempt a : attempts) {
+                        if (a.getUsername().equals(user.getUsername())) {
+                            System.out.println(a.getTopic() + " -> " + a.getScore() + "/" + a.getTotal());
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
